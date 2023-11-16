@@ -34,8 +34,8 @@ values ('Slippery When Wet', '1986'),
 --exercise_2
 --Название и продолжительность самого длительного трека.
 select name, duration from track
-order by duration desc
-limit 1;
+where duration < (select MAX(duration) from track)
+order by duration desc;
 
 --Название треков, продолжительность которых не менее 3,5 минут.
 select name from track
@@ -72,10 +72,10 @@ SELECT a.name, AVG(t.duration) FROM album a
 	GROUP BY a.name;
 
 --Все исполнители, которые не выпустили альбомы в 2020 году.
-SELECT e.name FROM executor e
-   JOIN album_and_executor aae  ON e.executor_id = aae.executor_id
-   JOIN album a ON a.album_id = aae.album_id
-   WHERE a.years_of_release < 2020; 
+select e.name from executor e
+join album_and_executor aae on e.executor_id = aae.executor_id 
+join album a on a.album_id = aae.album_id 
+where years_of_release not in ('2020') = (select years_of_release = '2020' from album); 
 
 --Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
 SELECT c.name FROM collection c
