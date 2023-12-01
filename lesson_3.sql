@@ -33,9 +33,8 @@ values ('Slippery When Wet', '1986'),
 
 --exercise_2
 --Название и продолжительность самого длительного трека.
-select name, duration from track
-where duration > (select MAX(duration) from track)
-order by duration desc;
+SELECT name, duration from track
+WHERE duration = (SELECT MAX(duration) from track);       -- Исправлено на '='
 
 --Название треков, продолжительность которых не менее 3,5 минут.
 select name from track
@@ -72,10 +71,14 @@ SELECT a.name, AVG(t.duration) FROM album a
 	GROUP BY a.name;
 
 --Все исполнители, которые не выпустили альбомы в 2020 году.
-select e.name from executor e
-join album_and_executor aae on e.executor_id = aae.executor_id 
-join album a on a.album_id = aae.album_id 
-where e.name not in (select name from executor where years_of_release = '2020'); 
+SELECT e.name from executor e                                          -- выбираю имена исполнителей из таблицы executor                         
+WHERE e.name not in (                                                  -- где исполнитель не выпустил альбом в 2020 году
+JOIN album_and_executor aae on aae.executor_id = e.executor_id         -- объединяю исполнителей с альбомами
+JOIN album a on a.album_id = aae.album_id                              -- объединяю альбомы с исполнителями
+WHERE years_of_release = '2020'                                        -- выбираю альбом который вышел в 2020 году
+);
+-- данный запрос написала по вашей подсказке, но он получился не рабочим, прошу Вас подсказать где ошибка?
+
 
 --Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
 SELECT c.name FROM collection c
